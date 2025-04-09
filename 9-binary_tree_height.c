@@ -1,55 +1,54 @@
 #include <stdlib.h>
 #include "binary_trees.h"
-/**
- * binary_tree_height - measures the height of a given b-tree.
- * @tree: pointer to the root node of the tree.
- *
- * Return: The height of @tree, 0 if @tree is NULL.
- */
+
 size_t binary_tree_height(const binary_tree_t *tree)
 {
 	size_t height = 0;
+	size_t current_level_nodes = 0;
+	size_t next_level_nodes = 0;
 	const binary_tree_t **queue;
 	const binary_tree_t *current;
-	int front = 0, rear = 0, level_size;
-	int max_queue_size = 1000;
+	size_t front = 0, rear = 0;
+	size_t queue_size = 10000;
 
 	if (!tree)
 		return (0);
-	queue = malloc(sizeof(binary_tree_t) * max_queue_size);
+	queue = malloc(queue_size * sizeof(binary_tree_t *));
 	if (!queue)
 		return (0);
 	queue[rear++] = tree;
-	while (front <= rear)
+	current_level_nodes = 1;
+	while (current_level_nodes > 0)
 	{
-		level_size = rear - front;
-		if (level_size > 0)
-			height++;
-		while (level_size > 0)
+		height++;
+		next_level_nodes = 0;
+		while (current_level_nodes > 0)
 		{
 			current = queue[front++];
+			current_level_nodes--;
 			if (current->left)
 			{
-				if ((max_queue_size - 1) <= rear)
+				if (rear >= queue_size)
 				{
 					free(queue);
-					return (height);
+					return (0);
 				}
 				queue[rear++] = current->left;
+				next_level_nodes++;
 			}
 			if (current->right)
 			{
-				if (rear >= max_queue_size - 1)
+				if (rear >= queue_size)
 				{
 					free(queue);
-					return (height);
+					return (0);
 				}
 				queue[rear++] = current->right;
+				next_level_nodes++;
 			}
-
-			level_size--;
 		}
+		current_level_nodes = next_level_nodes;
 	}
 	free(queue);
-	return (height > 0 ? height - 1 : 0);
+	return (height - 1);
 }
