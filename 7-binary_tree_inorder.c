@@ -16,11 +16,12 @@ void binary_tree_inorder(const binary_tree_t *tree, void(*func)(int))
 
 	if (!tree || !func)
 		return;
-	stack = malloc(sizeof(binary_tree_t) * max_size);
+
+	stack = malloc(sizeof(binary_tree_t *) * max_size); /* *stack = malloc(sizeof(binary_tree_t *)); stack++;*/
 	if (!stack)
 		return;
-	current = tree;
-	for (;;)
+	current = tree; /*Podes usar el mismo puntero tree*/
+	for (;;) /*Este bucle lo podes setear con el max_size y evitas el if, el return va afuera*/
 	{
 		while (current)
 		{
