@@ -13,7 +13,10 @@ size_t binary_tree_leaves(const binary_tree_t *tree)
 	binary_tree_t **stack = malloc(sizeof(binary_tree_t *) * 1024);
 
 	if (!tree || !stack)
+	{
+		free(stack);
 		return (0);
+	}
 
 	stack[rear++] = (binary_tree_t *)tree;
 	while (front < rear)
